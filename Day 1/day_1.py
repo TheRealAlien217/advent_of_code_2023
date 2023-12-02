@@ -16,9 +16,21 @@ calibration_document = 'calibration_document.txt'
 
 combined = []
 
+#Provide a list of the spelled out numbers and map them to their corresponding digits
+spelled_out_mapping = {"one": "o1e", "two": "t2o", "three": "t3e", "four": "f4r", "five": "f5e", "six": "s6x", "seven": "s7n", "eight": "e8t", "nine" : "n9e"}
+print(spelled_out_mapping)
+
 with open(calibration_document, 'r') as file:
     #Iterate over each line in the file
     for line in file:
+
+        # Check for spelled-out numbers and replace them with their numeric values
+        for word in spelled_out_mapping:
+            if word in line:
+                line = line.replace(word, spelled_out_mapping[word])
+
+        print(line)
+
         #find the first digit in the line
         first_digit = next((char for char in line if char.isdigit()), None)
 

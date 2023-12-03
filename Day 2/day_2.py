@@ -3,38 +3,33 @@
 #Determine which games would have been possible if the bag initially contained 12 red cubes, 13 green cubes, and 14 blue cubes.
 #Determine the sum of the IDs of the possible games.
 
-#immport regex module (for pattern matching in the strings)
+#import regex module (for pattern matching in the strings)
 import re
+import math
 
 game_input = 'puzzle_input_day_2.txt'
 
-#Set the limits for red, blue, and green
-limits = {
-    'red': 12,
-    'blue': 14,
-    'green': 13,
-}
-
-#Take the ist of sets and check if the colors meet the limits
-def set_valid(sets):
-    for set in sets:
+def get_min_cubes(sets): #takes a list of sets as an argument
+    #initalizes a dictionary with each color and sets each to 0
+    maxes = {
+        'red': 0,
+        'blue': 0,
+        'green': 0,
+    }
+    for set in sets: #iterates through each set in the list of sets
+        #splits each set into pairs
         for pairs in set.strip().split(','):
             qty, color = pairs.strip().split()
-            #if the pair goes over the limit return false
-            if int(qty) > limits[color]:
-                return False
-    return True
+            if maxes[color] < int(qty):
+                maxes[color] = int(qty)
+    return math.prod(maxes.values()) #product of the maximum values for each color
 
-with open (game_input, 'r') as f: #Read the game input file
-    id_sum = 0
-    #extract the game id of the quantity-color pairs
+#open the file and split each line in the file
+with open (game_input, 'r') as f:
+    power_sum = 0
     for line in f:
-        game, *sets = re.split(';|:', line.strip())
-        id = game.split()[1]
+        _, *sets = re.split(';|:', line.strip())
 
-        #If the set is valid add it to the id sum
-        if set_valid(sets):
-            id_sum+=(int(id))
-
-            
-    print(id_sum)
+        #calls get_min_cubes and adds the result to the sum
+        power_sum+=get_min_cubes(sets)
+    print(power_sum)

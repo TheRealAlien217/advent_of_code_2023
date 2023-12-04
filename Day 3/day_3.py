@@ -6,6 +6,7 @@
 #For each number in the array see if there is a symbol next to, above, below, or diagonally to it.
     #If there is a symbol mark it as true. Else mark as false
 #Sum the values of the numbers that were true
+from functools import reduce
 
 engine_schematic = "puzzle_input_day_3.txt"
 
@@ -37,21 +38,23 @@ def main():
             j += 1
 
     #checking whether any of the characters the number are symbols. if there is a symbol, add the number to the sum
-    sum = 0
+    gears = {}
     for num in nums:
-        part_number = False
         for i in range(num[1][0] - 1, num[1][0] + 2):
             if i >= 0 and i < NUM_LINES:
                 for j in range(num[1][1] - 1, num[1][2] + 2):
                     if j >= 0 and j < LINE_LEN:
-                        if not (lines[i][j].isdecimal() or lines[i][j] == "."):
-                            part_number = True
-                            sum += num[0]
-                            break
-                if part_number:
-                    break
+                        if lines[i][j] == "*":
+                            if not gears.get((i, j)):
+                                gears[(i, j)] = []
+                            gears[(i, j)].append(num[0])
 
-    print(sum)
+    gear_ratio_sum = 0
+    for gear in gears:
+        if len(gears[gear]) == 2:
+            gear_ratio_sum += reduce(lambda a, b: a * b, gears[gear])
+
+    print(gear_ratio_sum)
 
 
 if __name__ == "__main__":

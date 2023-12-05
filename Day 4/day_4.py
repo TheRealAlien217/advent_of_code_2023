@@ -2,29 +2,29 @@
 
 scratchcards_input = 'puzzle_input_day_4.txt'
 
-scratchcards = open(scratchcards_input, "r") 
+scratchcards = open(scratchcards_input, "r")
 #read scatchcards and store them as a list in whole_input
-whole_input = scratchcards.readlines() 
+whole_input = scratchcards.readlines()
 
-#where to store the points for each scratchcard
-all_points = []
+#initailize all_cards and set each element to 1
+all_cards = [1 for i in range(len(whole_input))]
 
 for line in whole_input: 
-    card_points = 0
+    #set ard matches to 0
+    card_matches = 0
 
     winning_numbers = ((line.split(": ")[1]).split(" | ")[0]).split()
     owned_numbers = ((line.split(": ")[1]).split(" | ")[1]).split()
 
+    #increment card matches if a number in owned numbers is also i winning numbers and card matches
     for number in owned_numbers:
-        #if owned number is in winning numbers and card_points is 0 set card points to 1
-        if number in winning_numbers and card_points == 0:
-            card_points = 1
-        #if its in wiining sumbers and card points is not 0 double it
-        elif number in winning_numbers:
-            card_points *= 2
+        if number in winning_numbers:
+            card_matches += 1
 
-    #if the scartchcard earned points append the points to all_points
-    if card_points != 0:
-        all_points.append(card_points)
+    for copy in range(all_cards[whole_input.index(line)]):
+        a = 1  #a helping valuable for calculating the indexes of the cards that should have a new copy
+        for i in range(card_matches):
+            all_cards[whole_input.index(line) + a] += 1
+            a += 1
 
-print(sum(int(i) for i in all_points))
+print(sum(all_cards))
